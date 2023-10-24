@@ -1,4 +1,5 @@
 import socket
+import hashlib
 
 # Define the server address (host and port)
 server_host = '0.0.0.0'  # Listen on all available network interfaces
@@ -13,10 +14,12 @@ print(f"Server listening on {server_host}:{server_port}")
 while True:
     # Receive data from the client
     data, client_address = server_socket.recvfrom(1024)
-    print(f"Received from {client_address}: {data.decode('utf-8')}")
+    message = data.decode('utf-8')
+    print(f"Received from {client_address}: {message}")
 
-    # You can add your processing logic here
+    # Calculate the SHA-256 hash of the message
+    sha256_hash = hashlib.sha256(message.encode()).hexdigest()
+    print(f"SHA-256 Hash: {sha256_hash}")
 
-    # Send a response back to the client
-    response = "Hello from the server"
-    server_socket.sendto(response.encode('utf-8'), client_address)
+    # Send the hash back to the client
+    server_socket.sendto(sha256_hash.encode('utf-8'), client_address)
