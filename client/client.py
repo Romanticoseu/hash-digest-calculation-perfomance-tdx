@@ -1,7 +1,8 @@
 import socket
+import os
 
 # Define the server address (host and port)
-server_host = 'localhost'  # Change this to the IP of the server
+server_host = os.getenv("SERVER_HOST_NAME")  # Change this to the IP of the server
 server_port = 12345
 
 # Create a UDP socket
