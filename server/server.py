@@ -16,23 +16,43 @@ buffer_size = 1024
 print(f"Server listening on {server_host}:{server_port}")
 
 while True:
-    # Receive data from the client
-    data, client_address = server_socket.recvfrom(buffer_size)
+    # Create an empty buffer to accumulate data
+    data_buffer = b""  # Initialize as a byte string
+    
+    
+    while True:
+        # Receive data from the client
+        data, client_address = server_socket.recvfrom(buffer_size)
+
+        if not data:
+            print("yes")
+            break  # No more data received, exit the inner loop
+
+        # Check for a special marker to exit the loop
+        if data == b"END_OF_TRANSMISSION":
+            break
+        # Append the received data to the buffer
+        data_buffer += data
+        
 
     # Record server receive time
     server_receive_time = time.time()
 
-    message = data.decode('utf-8')
-    print(f"Received from {client_address}: {message}")
+    message = data_buffer.decode('utf-8')
+    # Split the message into lines and count them
+    lines = message.split('\n')
+    line_count = len(lines)
+    print(f"Received from {client_address}: Lines: {line_count}")
 
-    # Calculate the SHA-256 hash of the message
+    # Calculate the SHA-256 hash of the entire message
     hash_start_time = time.perf_counter()  # Record hash calculation start time
     sha256_hash = hashlib.sha256(message.encode()).hexdigest()
     hash_end_time = time.perf_counter()  # Record hash calculation end time
     print(f"SHA-256 Hash: {sha256_hash}")
 
-    # Send the hash back to the client
-    server_socket.sendto(sha256_hash.encode('utf-8'), client_address)
+    # Send the hash and line count back to the client
+    response_message = f"Hash: {sha256_hash}"
+    server_socket.sendto(response_message.encode('utf-8'), client_address)
 
     # Calculate and print times
     print(f"Server receive time: {server_receive_time}")
