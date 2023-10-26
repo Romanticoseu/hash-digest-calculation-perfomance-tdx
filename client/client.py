@@ -3,15 +3,16 @@ import os
 import time
 
 # Define the server address (host and port)
-# server_host = os.getenv("SERVER_HOST_NAME") 
-server_host = '127.0.0.1'  # Change this to the server's IP
+server_host = os.getenv("SERVER_HOST_NAME") 
+# server_host = '127.0.0.1'  # Change this to the server's IP
 server_port = 12345
 
 # Create a UDP socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Specify the path to the file containing data
-data_file_path = "iris.data"
+data_file_path = os.getenv("DATA_PATH")
+# data_file_path = "./data/iris.data"
 
 # Define the chunk size for reading and sending data
 chunk_size = 1024  # You can adjust this value as needed

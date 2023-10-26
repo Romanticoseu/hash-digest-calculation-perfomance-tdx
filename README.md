@@ -12,8 +12,8 @@ docker build \
 
 ## Run two containers
 ```bash
-export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 # create container_B
+export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 docker run -itd \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
@@ -23,10 +23,14 @@ docker run -itd \
 	-m server
 
 # create container_A
+export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
+export DATA_PATH="$(pwd)/data"
 docker run -it \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
 	-e SERVER_HOST_NAME=zehua-test-B \
+	-e DATA_PATH=/app/data/small.txt \
+	-v $DATA_PATH:/app/data \
 	--name zehua-test-A \
 	--link zehua-test-B \
 	$DOCKER_IMAGE \
