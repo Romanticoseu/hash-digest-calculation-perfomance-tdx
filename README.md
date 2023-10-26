@@ -8,8 +8,6 @@ docker build \
   --rm --no-cache -t romanticoseu/hash-digest-calculation-perfomance:test .
 ```
 
-```
-
 ## Run two containers
 ```bash
 # create container_B
