@@ -7,12 +7,22 @@ docker build \
   --build-arg https_proxy=http://child-prc.intel.com:913/ \
   --rm --no-cache -t romanticoseu/hash-digest-calculation-perfomance:test .
 ```
+## Generate test data
+We can use the `tr` command to generate random data to transfer from A to B
+And use the script:
+```bash
+cd data
+chmod +x generate.sh
+./generate.sh 1kb    # e.g., 1kb, 50kb, 100kb, 1mb, 10mb
+```
 
 ## Run two containers
 ```bash
 # create container_B
 export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 docker run -itd \
+	--cpuset-cpus="0-3" \
+	--memory="2G" \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
 	--name zehua-test-B \
@@ -23,7 +33,9 @@ docker run -itd \
 # create container_A
 export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 export DATA_PATH="$(pwd)/data"
-docker run -it \
+docker run -itd \
+	--cpuset-cpus="4-7" \
+	--memory="2G" \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
 	-e SERVER_HOST_NAME=zehua-test-B \
@@ -34,3 +46,4 @@ docker run -it \
 	$DOCKER_IMAGE \
 	-m client
 ```
+
