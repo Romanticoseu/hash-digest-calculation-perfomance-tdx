@@ -101,7 +101,20 @@ We can get the result in `log/*.csv`
 
 ## Analyze results and plot them
 I use `google colab` to plot them. And you can see the result in this [link](https://drive.google.com/drive/folders/1fLGbNxuz9Rhs60zujCUf9jEzJmqjWwoN?usp=sharing)
+1. Time(1kb-100kb)
+![time1-100](https://github.com/Romanticoseu/hash-digest-calculation-perfomance-tdx/assets/47251317/c681ed1d-2d55-47c8-a302-61571b18e7b6)
 
+2. Time(100kb-1000kb)
+![time100-1000kb](https://github.com/Romanticoseu/hash-digest-calculation-perfomance-tdx/assets/47251317/860c7bc8-b4c9-47a8-8333-5d5fd1f07835)
+
+3. Time(1mb-10mb)
+![time1000-10000kb](https://github.com/Romanticoseu/hash-digest-calculation-perfomance-tdx/assets/47251317/41e409c8-25df-4871-87a3-db25a3cf16e6)
+
+4. Comparison of statistical values
+![statics_anlyze](https://github.com/Romanticoseu/hash-digest-calculation-perfomance-tdx/assets/47251317/a7b35a1e-f80e-42f7-aee0-290f02af515d)
+
+5. Comparion of average time
+![average_time](https://github.com/Romanticoseu/hash-digest-calculation-perfomance-tdx/assets/47251317/81db8425-d2b7-4266-8dc2-20d8cc63a17f)
 
 
 ## The tdx-vm <a name="tdx-vm"></a>
