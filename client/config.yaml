@@ -1,7 +1,7 @@
-# client_config:
-#   type: continuous
-#   size: 1-100
-#   times: 1
+client_config:
+  type: continuous
+  size: 1-100
+  times: 1
 
 client_config: 
   type: discrete 
