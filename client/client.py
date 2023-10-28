@@ -29,6 +29,8 @@ def send_data(data_file_path, server_host, server_port, chunk_size, delay_time, 
 
     # Record transfer time start
     transfer_start_time = time.time()
+    
+    client_socket.sendto(b"SIZE_FLAG " + size_flag.encode(), (server_host, server_port))
 
     i = 0
     with open(data_file_path, 'rb') as data_file:
@@ -58,7 +60,8 @@ def send_data(data_file_path, server_host, server_port, chunk_size, delay_time, 
         logging.info(f"Transfer time: {transfer_end_time - transfer_start_time - total_delay_time}")
 
 def generate_data(size_flag):
-    generate_command = f"./generate.sh -s {size_flag}"
+    generate_command = f"./generate.sh {size_flag}"
+    print(generate_command)
     subprocess.run(generate_command, shell=True)
 
 def main():

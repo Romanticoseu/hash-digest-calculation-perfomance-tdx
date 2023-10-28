@@ -35,7 +35,7 @@ docker run -itd \
 	--memory="16G" \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
-	-e TDX_ENABLE=false \         # if true will run in tdx-vm
+	-e TDX_ENABLE=false \
 	-v $LOG_PATH:/app/log \
 	--name zehua-test-B \
 	-p 12345:12345/udp \
@@ -53,7 +53,7 @@ docker run -itd \
 	-e https_proxy=http://child-prc.intel.com:913/ \
 	-e SERVER_HOST_NAME=zehua-test-B \
 	-e DATA_PATH=/app/data \
-	-e TDX_ENABLE=false \         # if true will run in tdx-vm
+	-e TDX_ENABLE=false \
 	-v $LOG_PATH:/app/log \
 	-v $DATA_PATH:/app/data \
 	--name zehua-test-A \
