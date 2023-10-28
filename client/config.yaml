@@ -6,4 +6,4 @@
 client_config: 
   type: discrete 
   size: [1kb, 10kb]
-  times: 2
+  times: 10
