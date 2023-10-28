@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Remove any existing hash_digest file
-rm -f hash_digest
+rm -f hash_digest.txt
 
 # Iterate through all .txt files in the current directory
 for file in *.txt; do
@@ -12,7 +12,7 @@ for file in *.txt; do
     filename=$(basename "$file" .txt)
     
     # Append the result to the hash_digest file
-    echo "${filename}: ${hash}" >> hash_digest
+    echo "${filename}: ${hash}" >> hash_digest.txt
 done
 
-echo "Hash values have been recorded in hash_digest."
+echo "Hash values have been recorded in hash_digest.txt ."

@@ -1,10 +1,16 @@
 import socket
+import os
 import hashlib
 import time
 import logging
 
+tdx_flag = os.getenv("TDX_ENABLE")
+
 # Configure logging to write to a log file
 log_filename = 'server.log'
+if tdx_flag:
+    log_filename = 'tdx_' + log_filename
+log_filename = './log/' + log_filename
 logging.basicConfig(filename=log_filename, level=logging.INFO,
                     format='%(asctime)s [%(levelname)s]: %(message)s')
 

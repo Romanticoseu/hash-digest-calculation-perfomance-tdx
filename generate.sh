@@ -26,7 +26,7 @@ case "$unit" in
 esac
 
 # Generate a random filename based on the specified size
-filename="${1}.txt"
+filename="./data/${1}.txt"
 
 # Generate the file with random content
 tr -dc "A-Za-z0-9" < /dev/urandom | fold -w 100 | head -c "$size_bytes" > "$filename"

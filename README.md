@@ -28,12 +28,15 @@ chmod +x calculate.sh
 ## Run two containers
 ```bash
 # create container_B
+export LOG_PATH="$(pwd)/log"
 export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 docker run -itd \
 	--cpuset-cpus="0-15" \
 	--memory="16G" \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
+	-e TDX_ENABLE=false \         # if true will run in tdx-vm
+	-v $LOG_PATH:/app/log \
 	--name zehua-test-B \
 	-p 12345:12345/udp \
 	$DOCKER_IMAGE \
@@ -42,17 +45,20 @@ docker run -itd \
 # create container_A
 export DOCKER_IMAGE=romanticoseu/hash-digest-calculation-perfomance:test
 export DATA_PATH="$(pwd)/data"
+export LOG_PATH="$(pwd)/log"
 docker run -itd \
 	--cpuset-cpus="16-31" \
 	--memory="16G" \
 	-e http_proxy=http://child-prc.intel.com:913/ \
 	-e https_proxy=http://child-prc.intel.com:913/ \
 	-e SERVER_HOST_NAME=zehua-test-B \
-	-e DATA_PATH=/app/data/small.txt \
+	-e DATA_PATH=/app/data \
+	-e TDX_ENABLE=false \         # if true will run in tdx-vm
+	-v $LOG_PATH:/app/log \
 	-v $DATA_PATH:/app/data \
 	--name zehua-test-A \
 	--link zehua-test-B \
 	$DOCKER_IMAGE \
-	-m client -s SIZE      # change this
+	-m client
 ```
 
