@@ -3,6 +3,7 @@ import os
 import hashlib
 import time
 import logging
+import csv
 
 tdx_flag = os.getenv("TDX_ENABLE")
 
@@ -13,6 +14,10 @@ if tdx_flag:
 log_filename = './log/' + log_filename
 logging.basicConfig(filename=log_filename, level=logging.INFO,
                     format='%(asctime)s [%(levelname)s]: %(message)s')
+
+# Define the path for the CSV file
+csv_file_path = './log/res.csv'
+tdx_enabled = 1 if tdx_flag == "true" else 0
 
 # Define the server address (host and port)
 server_host = '0.0.0.0'  # Listen on all available network interfaces
@@ -73,3 +78,12 @@ while True:
 
     # Calculate and log times
     logging.info(f"Hash calculation time: {hash_end_time - hash_start_time}")
+    
+    # Save the data to the CSV file
+    with open(csv_file_path, mode='a', newline='') as csv_file:
+        fieldnames = ['tdx_enabled', 'data_size', 'calculation_time']
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        
+        # Check if the SIZE_FLAG is received
+        if 'size_flag' in locals():
+            writer.writerow({'tdx_enabled': tdx_enabled, 'data_size': size_flag, 'calculation_time': hash_end_time - hash_start_time})
