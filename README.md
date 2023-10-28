@@ -62,36 +62,49 @@ docker run -itd \
 
 ### config
 I will use the `client/config.yaml`
-And I have two sets of default configurations to test
-1. 
+And I have four sets of default configurations to test
 ```yaml
 client_config:
   type: continuous
   size: 1-100
-  times: 1
-```
-
-2. 
-```yaml
+  times_or_steps: 1
+---
+client_config:
+  type: continuous
+  size: 100-1000
+  times_or_steps: 10
+---
+client_config:
+  type: continuous
+  size: 1000-10000
+  times_or_steps: 100
+---
 client_config: 
   type: discrete 
-  size: [1kb, 10kb]
-  times: 10
+  size: [1kb, 10kb, 100kb, 1mb, 10mb]
+  times_or_steps: 10
+
 ```
 
-And I can change these configurations as appropriate
 
 ### In native
 We should change in workdir and use [Run two containers section](#how-to-run-containers)'s command to run.
 The important thing to note is that setting the environment variable `TDX_ENABLE` to "false".
 We can run the command directly without the need to build, as the image has already been pushed to Docker Hub.
 
+We can get the result in `log/*.csv`
 ### In tdx
 We should enter in a [tdx-vm](#tdx-vm) and make sure the vm has `Docker`
+Because we have generate data file in previous step, we can use `scp` to cpy data files.
 Then just set `TDX_ENABLE` as true to run the command in previous steps.
+We can get the result in `log/*.csv`
 
 ## Analyze results and plot them
+I use `google colab` to plot them. And you can see the result in this [link](https://drive.google.com/drive/folders/1fLGbNxuz9Rhs60zujCUf9jEzJmqjWwoN?usp=sharing)
 
 
 
 ## The tdx-vm <a name="tdx-vm"></a>
+This `tdx-vm` has been deployed in our company's machine.
+The process is very complicated and requires a series of hardware and BIOS configurations.
+This vm use libvirt to launch and the vm manager is virsh.
