@@ -1,0 +1,9 @@
+client_config:
+  type: continuous
+  size: 1-100
+  times: 1
+
+# client_config: 
+#   type: discrete 
+#   size: [1kb, 10kb, 100kb, 1mb, 10mb]
+#   times: 100
