@@ -43,6 +43,11 @@ while True:
         print(i, "\n", data)
         i+=1
         
+        # Check index
+        if data.startswith(b"INDEX"):
+            index = data[len(b"INDEX"):].decode()
+            csv_file_path = f'./log/res_{index}.csv'
+        
         # Check if the message starts with SIZE_FLAG
         if data.startswith(b"SIZE_FLAG"):
             size_flag = data[len(b"SIZE_FLAG"):].decode()

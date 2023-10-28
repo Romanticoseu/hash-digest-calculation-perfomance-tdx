@@ -4,6 +4,13 @@ import time
 import logging
 import subprocess
 import yaml
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-n", "--config_number", type=int, help="Choose a config by number")
+
+args = parser.parse_args()
 
 # Define the server address (host and port)
 server_host = os.getenv("SERVER_HOST_NAME") 
@@ -16,7 +23,7 @@ data_file_dir = os.getenv("DATA_PATH")
 chunk_size = 1024  # You can adjust this value as needed
 delay_time = 0.01  # Adjust this value to control the send rate
 
-def send_data(data_file_path, server_host, server_port, chunk_size, delay_time, size_flag):
+def send_data(data_file_path, server_host, server_port, chunk_size, delay_time, size_flag, index):
     
     # Configure logging to write to a log file
     log_filename = "log/client_" + size_flag + '.log'
@@ -30,6 +37,7 @@ def send_data(data_file_path, server_host, server_port, chunk_size, delay_time, 
     # Record transfer time start
     transfer_start_time = time.time()
     
+    client_socket.sendto(b"INDEX" + str(index).encode(), (server_host, server_port))
     client_socket.sendto(b"SIZE_FLAG " + size_flag.encode(), (server_host, server_port))
 
     i = 0
@@ -67,33 +75,37 @@ def generate_data(size_flag):
 def main():
     # Load configuration from config.yaml
     with open("config.yaml", "r") as config_file:
-        config = yaml.safe_load(config_file)
+        config = list(yaml.load_all(config_file, Loader=yaml.FullLoader))
 
-    client_config = config.get("client_config")
+    for index, client_config in enumerate(config):
+        client_config = client_config.get("client_config")
+        if client_config:
+            type = client_config.get("type")
+            size = client_config.get("size")
+            times = client_config.get("times_or_steps")
 
-    if client_config:
-        type = client_config.get("type")
-        size = client_config.get("size")
-        times = client_config.get("times")
-
-        if type == "continuous":
-            # Generate data for each size in the range
-            size_range = size.split("-")
-            start_size = int(size_range[0].strip())
-            end_size = int(size_range[1].strip())
-            for size_kb in range(start_size, end_size + 1):
-                size_flag = f"{size_kb}kb"
-                generate_data(size_flag)
-                send_data(data_file_dir + f"/{size_flag}.txt", server_host, server_port, chunk_size, delay_time, size_flag)
-        elif type == "discrete":
-            # Generate data for each size in the list and repeat 'times' times
-            size_list = size
-            for size_flag in size_list:
-                generate_data(size_flag)
-                for _ in range(times):
-                    send_data(data_file_dir + f"/{size_flag}.txt", server_host, server_port, chunk_size, delay_time, size_flag)
-        else:
-            print("Invalid 'type' in configuration. Use 'continuous' or 'discrete'.")
+            if type == "continuous":
+                # Generate data for each size in the range
+                size_range = size.split("-")
+                start_size = int(size_range[0].strip())
+                end_size = int(size_range[1].strip())
+                for size_kb in range(start_size, end_size + 1, times):
+                    size_flag = f"{size_kb}kb"
+                    data_file_path = data_file_dir + f"/{size_flag}.txt"
+                    if not os.path.exists(data_file_path):
+                        generate_data(size_flag)
+                    send_data(data_file_path, server_host, server_port, chunk_size, delay_time, size_flag, index)
+            elif type == "discrete":
+                # Generate data for each size in the list and repeat 'times' times
+                size_list = size
+                for size_flag in size_list:
+                    data_file_path = data_file_dir + f"/{size_flag}.txt"
+                    if not os.path.exists(data_file_path):
+                        generate_data(size_flag)
+                    for _ in range(times):
+                        send_data(data_file_path, server_host, server_port, chunk_size, delay_time, size_flag, index)
+            else:
+                print("Invalid 'type' in configuration. Use 'continuous' or 'discrete'.")
 
 if __name__ == "__main__":
     main()
